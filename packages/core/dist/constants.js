@@ -1,0 +1,63 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TAG_CLOSER_COMMENT = exports.TAG_OPENER_COMMENT = exports.TAG_CLOSER_CDATA = exports.TAG_OPENER_CDATA = exports.SIGN_LESS_SLASH_MORE = exports.SIGN_SLASH_MORE = exports.SIGN_LESS_SLASH = exports.SIGN_SLASH = exports.SIGN_MORE = exports.SIGN_LESS = exports.TAGNAME_COMPONENT = exports.TAGNAME_DIRECTIVE = exports.TAGNAME_TEMPLATE = exports.TAGNAME_CHILDREN = exports.TAGNAME_SLOT = exports.TAGNAME_SCRIPT = exports.TAGNAME_STYLE = exports.TAGNAME_DOCTYPE = exports.TAGNAME_ELEMENT = exports.TAGNAME_COMMENT = exports.TAGNAME_CDATA = exports.TAGNAME_TEXT = exports.TAGNAME_ROOT = void 0;
+const TAGNAME_ROOT = 'root'; // 0
+
+exports.TAGNAME_ROOT = TAGNAME_ROOT;
+const TAGNAME_TEXT = 'text'; // 3
+
+exports.TAGNAME_TEXT = TAGNAME_TEXT;
+const TAGNAME_CDATA = 'cdata'; // 4
+
+exports.TAGNAME_CDATA = TAGNAME_CDATA;
+const TAGNAME_COMMENT = 'comment'; // 8
+
+exports.TAGNAME_COMMENT = TAGNAME_COMMENT;
+const TAGNAME_ELEMENT = 'element';
+exports.TAGNAME_ELEMENT = TAGNAME_ELEMENT;
+const TAGNAME_DOCTYPE = '!doctype';
+exports.TAGNAME_DOCTYPE = TAGNAME_DOCTYPE;
+const TAGNAME_STYLE = 'style';
+exports.TAGNAME_STYLE = TAGNAME_STYLE;
+const TAGNAME_SCRIPT = 'script';
+exports.TAGNAME_SCRIPT = TAGNAME_SCRIPT;
+const TAGNAME_SLOT = 'slot';
+exports.TAGNAME_SLOT = TAGNAME_SLOT;
+const TAGNAME_CHILDREN = 'children';
+exports.TAGNAME_CHILDREN = TAGNAME_CHILDREN;
+const TAGNAME_TEMPLATE = 'template';
+exports.TAGNAME_TEMPLATE = TAGNAME_TEMPLATE;
+const TAGNAME_DIRECTIVE = 'directive';
+exports.TAGNAME_DIRECTIVE = TAGNAME_DIRECTIVE;
+const TAGNAME_COMPONENT = 'component';
+exports.TAGNAME_COMPONENT = TAGNAME_COMPONENT;
+const SIGN_LESS = '<';
+exports.SIGN_LESS = SIGN_LESS;
+const SIGN_MORE = '>';
+exports.SIGN_MORE = SIGN_MORE;
+const SIGN_SLASH = '/';
+exports.SIGN_SLASH = SIGN_SLASH;
+const SIGN_LESS_SLASH = SIGN_LESS + SIGN_SLASH; // '</'
+
+exports.SIGN_LESS_SLASH = SIGN_LESS_SLASH;
+const SIGN_SLASH_MORE = SIGN_SLASH + SIGN_MORE; // '/>'
+
+exports.SIGN_SLASH_MORE = SIGN_SLASH_MORE;
+const SIGN_LESS_SLASH_MORE = SIGN_LESS + SIGN_SLASH + SIGN_MORE; // '</>'
+
+exports.SIGN_LESS_SLASH_MORE = SIGN_LESS_SLASH_MORE;
+const TAG_OPENER_CDATA = SIGN_LESS + '![CDATA['; // '<![CDATA['
+
+exports.TAG_OPENER_CDATA = TAG_OPENER_CDATA;
+const TAG_CLOSER_CDATA = ']]' + SIGN_MORE; // ']]>'
+
+exports.TAG_CLOSER_CDATA = TAG_CLOSER_CDATA;
+const TAG_OPENER_COMMENT = SIGN_LESS + '!--'; // '<!--'
+
+exports.TAG_OPENER_COMMENT = TAG_OPENER_COMMENT;
+const TAG_CLOSER_COMMENT = '--' + SIGN_MORE; // '-->'
+
+exports.TAG_CLOSER_COMMENT = TAG_CLOSER_COMMENT;

@@ -1,9 +1,9 @@
 {
-  "name": "rease",
+  "name": "@rease/core",
   "version": "0.0.1",
-  "description": "In progress",
+  "description": "rease-core",
   "author": "cftcview <cftcview@gmail.com>",
-  "homepage": "https://github.com/wareset/rease/tree/main/packages/rease#readme",
+  "homepage": "https://github.com/wareset/rease/tree/main/packages/core#readme",
   "license": "MIT",
   "main": "dist/index",
   "module": "dist/index.mjs",
@@ -12,7 +12,7 @@
     "README.md"
   ],
   "keywords": [
-    "rease"
+    "rease-core"
   ],
   "scripts": {
     "babel:copy": "babel src --out-dir dist --copy-files --keep-file-extension --no-babelrc",
@@ -37,6 +37,7 @@
     "url": "https://github.com/wareset/rease/issues"
   },
   "dependencies": {
+    "@rease/common": "0.0.1",
     "@wareset-utilites/split": "0.3.0",
     "wareset-utilites": "0.0.10"
   }

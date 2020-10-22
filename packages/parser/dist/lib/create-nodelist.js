@@ -10,7 +10,17 @@ Object.defineProperty(exports, "TAGNAME_COMMENT", {
     return _core().TAGNAME_COMMENT;
   }
 });
-exports.CLOSER = exports.OPENER = void 0;
+exports.SAMELESS = exports.CLOSER = exports.OPENER = void 0;
+
+function _common() {
+  const data = require("@rease/common");
+
+  _common = function () {
+    return data;
+  };
+
+  return data;
+}
 
 function _core() {
   const data = require("@rease/core");
@@ -32,13 +42,15 @@ exports.OPENER = OPENER;
 const CLOSER = 'closer';
 exports.CLOSER = CLOSER;
 const SAMELESS = 'sameless';
+exports.SAMELESS = SAMELESS;
 
 const first = (tag, v) => tag.length >= v.length && tag.indexOf(v) === 0;
 
 const last = (tag, v) => tag.length >= v.length && tag.lastIndexOf(v) === tag.length - v.length;
 
-const getTagName = v => {
-  return v.trim().split(/\s+/)[0].replace(/(^[\s<>/]+)|[\s<>/]+$/g, '');
+const parseTagOpener = (v, node = []) => {
+  const arr = (0, _common().splitSpaces)(v.replace(/(^[\s<>/]+)|[\s<>/]+$/g, ''));
+  return [node.tagName, node.attrs] = [arr.shift(), arr.map(v => (0, _common().splitAttr)(v))];
 };
 
 const whilerForReserveds = (data, i, end) => {
@@ -55,47 +67,55 @@ const whilerForReserveds = (data, i, end) => {
   return res;
 };
 
-const SAFE_QUOTES = /(\))|(\])|(\})|(\()|(\[)|(\{)|(\\?')|(\\?")|(\\?`)/g;
+const SAFE_QUOTES = /(\\?')|(\\?")|(\\?`)|(\()|(\[)|(\{)|(\))|(\])|(\})/g;
 
 function createNodelist(html) {
   const resultDirty = [];
-  const data = html.trim().replace(/\r*\n+(\/?>)/, '$1').replace(/(<\/?)\r*\n+/, '$1').replace(/(<!\[CDATA\[|<!--|\]\]>|-->)|(<\/?|--?\s+)|(\/?>)/g, (__, c, a, b) => c ? `\0${c}\0` : (b || '') + '\0' + (a || '')).split(/(\r*\n*\0\r*\n*|\r*\n+)/).map(v => v.replace(/\0/g, '')).filter(v => v.length);
+  const data = html.trim().replace(/\r*\n+(\/?>)/, '$1').replace(/(<\/?)\r*\n+/, '$1').replace(/(<!\[CDATA\[|\]\]>|<!--|-->)|(<\/?|--?\s+)|(\/?>)/g, (__, c, a, b) => c ? `\0${c}\0` : (b || '') + '\0' + (a || '')).split(/(\r*\n*\0\r*\n*|\r*\n+)/).map(v => v.replace(/\0/g, '')).filter(v => v.length);
   console.log([...data]);
   let deep = 0;
   let node = [];
-  let index;
+  let tag, index, column;
 
   data: for (let i = 0; i < data.length; i++) {
-    const tag = data[i].trim();
+    tag = data[i].trim();
 
     if (first(tag, _core().SIGN_LESS) && !first(tag, _core().TAG_OPENER_CDATA) && !first(tag, _core().TAG_OPENER_COMMENT)) {
+      let pusher = '';
+      let isWhile = true;
       let isQuote = false;
       const matches = [];
-      tag.replace(SAFE_QUOTES, (...a) => {
-        a.slice(1, -2).forEach((v, k, a) => {
-          if (!v || v.length > 1) return;
 
-          if (!isQuote) {
-            if (k >= 3) matches.push(k);else if ((index = matches.indexOf(k + 3)) > -1) {
-              matches.splice(index, 1);
-            }
-          }
+      do {
+        column = data[i];
+        column.replace(SAFE_QUOTES, (...a) => {
+          a.slice(1, -2).forEach((v, k, a) => {
+            if (!v || k <= 2 && v.length > 1) return;
 
-          if (k === isQuote) matches.pop(), isQuote = false;else if (k >= 6) isQuote = k; // console.log(a, matches);
+            if (isQuote === false) {
+              if (k <= 2) isQuote = k;
+              if (k <= 5) matches.push(k);else if ((index = matches.indexOf(k - 3)) > -1) {
+                matches.splice(index, 1);
+              }
+            } else if (k === isQuote) matches.pop(), isQuote = false;
+          });
         });
-      }); // console.log(data[i], matches);
+        pusher += column;
 
-      if (matches.length || !last(tag, _core().SIGN_MORE)) {
-        if (i + 1 >= data.length) throw new Error();
-        data[i + 1] = data[i] + data[i + 1], data.splice(i, 1), --i;
-        continue data;
-      }
+        if (isWhile = matches.length || !last(pusher.trim(), _core().SIGN_MORE)) {
+          if (++i >= data.length) throw new Error();
+        }
+      } while (isWhile);
+
+      data[i] = pusher;
+      tag = pusher.trim();
     }
 
     for (const block of RESERVED_TAGS) {
       if (first(tag, _core().SIGN_LESS + block)) {
         index = _core().SIGN_LESS_SLASH + block + _core().SIGN_MORE;
         resultDirty.push(node = [deep, block, ...whilerForReserveds(data, i, index)]);
+        parseTagOpener(node[2], node);
         continue data;
       }
     }
@@ -106,13 +126,14 @@ function createNodelist(html) {
       if (first(tag, block[1]) || (index = first(tag, _core().SIGN_LESS + block[0]))) {
         index = !index ? block[2] : _core().SIGN_LESS_SLASH + block[0] + _core().SIGN_MORE;
         resultDirty.push(node = [deep, block[0], ...whilerForReserveds(data, i, index)]);
+        parseTagOpener(node[2], node);
         continue data;
       }
     }
 
     if (first(tag, _core().SIGN_LESS) && tag[1].match(/[/!{\w]/)) {
       resultDirty.push(node = [deep, '', data[i]]);
-      node.tagName = getTagName(data[i]);
+      parseTagOpener(node[2], node);
 
       if (tag === _core().SIGN_LESS_SLASH_MORE) {
         resultDirty.forEach(v => v[1] === OPENER && (node.tagName = v.tagName));

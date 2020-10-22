@@ -37,9 +37,9 @@
     "url": "https://github.com/wareset/rease/issues"
   },
   "dependencies": {
+    "@rease/common": "0.0.1",
     "@rease/core": "0.0.1",
-    "@rease/dom": "0.0.1",
-    "@wareset-utilites/split": "0.2.1",
+    "@wareset-utilites/split": "0.3.0",
     "wareset-utilites": "0.0.10"
   }
 }
