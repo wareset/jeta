@@ -1,0 +1,19 @@
+<script>
+import Test from 'test.rease'
+</script>
+
+<template lang="pug" minify="true">
+div
+  Test(): span Content
+  +tag("{Test}")(): span Content
+</template>
+
+<style>
+div {
+  color: red;
+
+  span {
+    color: green;
+  }
+}
+</style>

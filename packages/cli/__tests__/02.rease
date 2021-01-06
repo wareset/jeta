@@ -1,0 +1,7 @@
+<script>
+const test = 'ATR'
+</script>
+
+<template minify="false">
+  <slot name="SlotName" atr="{test}" />
+</template>

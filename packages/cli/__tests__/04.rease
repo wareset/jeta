@@ -1,0 +1,32 @@
+<script>
+import Teee from './02.rease'
+
+const test = 'C0C1'
+</script>
+
+<template lang="pug" minify="false">
+macro(name="list-item")
+  li() {this.itemkey}
+
+list-item(itemkey="{123}", key="{test}")
+Teee("{test}")
+</template>
+
+<template lang="pug" minify="true">
+slot(name="SlotName", atr="12", "{   ...test   }") Text content {test}
+</template>
+
+<template concise minify="false">
+|
+slot(name="SlotName", atr="{test}", {   ...test   }) Text content {test}
+</template>
+
+<template minify="false">
+  <slot name="SlotName" atr="{test}" {   ...test } />
+</template>
+
+<style>
+div {
+  color: red;
+}
+</style>

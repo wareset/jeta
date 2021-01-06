@@ -1,0 +1,14 @@
+<script>
+import Test from 'test.rease'
+</script>
+
+<template lang="pug" minify="false">
+test() Content
+Test() Content
+
++tag("test")() Content
++tag("Test")() Content
+
+// +tag("{test}")() Content
++tag("{Test}")() Content
+</template>

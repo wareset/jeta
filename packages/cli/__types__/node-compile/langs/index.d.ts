@@ -1,0 +1,11 @@
+declare function sucrase(content?: string): string;
+declare function typescript(content?: string): string;
+declare const ts: typeof typescript;
+declare function pug(content?: string): string;
+declare const jade: typeof pug;
+declare function less(content?: string): string;
+declare function sass(content?: string): string;
+declare const scss: typeof sass;
+declare function stylus(content?: string): string;
+declare const styl: typeof stylus;
+export { sucrase, ts, typescript, jade, pug, less, scss, sass, styl, stylus };
