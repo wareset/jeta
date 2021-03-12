@@ -25,8 +25,8 @@ function parseHTMLX(
       token.raw = token.raw
         .replace(/(?<![\\])[{}]/g, '')
         .replace(/\\([{}])/g, '$1')
-      if (!token.raw) continue
     }
+    if (!token.raw) continue
 
     if (!res.length || !res[0].deep !== !token.deep) res.unshift(token)
     else res[0].raw = token.raw + res[0].raw
@@ -48,7 +48,7 @@ function parseHTMLX(
     res[k] = { deep: v.deep, raw: res[k].raw }
   })
 
-  res.toString = function toString(): string {
+  res.toString = (): string => {
     return res.map((v) => v.raw).join(' + ')
   }
 

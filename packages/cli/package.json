@@ -26,9 +26,9 @@
     "rease-cli"
   ],
   "scripts": {
-    "dester": "dester ./src ./ --types __types__",
     "test": "jest --",
     "rease": "./rease",
+    "dester": "dester ./src ./ --types __types__",
     "build": "rm -rf ./__types__ && rm -rf ./bin && rm -rf ./compile && rm -rf ./node-compile && npm run -s dester",
     "dev": "npm run -s dester -- -w",
     "pkg:name": "cat package.json | grep '\"name\":' | cut -d '\"' -f4",
@@ -73,11 +73,11 @@
     }
   },
   "dependencies": {
-    "enum-chars": "1.1.1",
-    "kleur": "^4.1.3",
+    "enum-chars": "1.2.1",
+    "kleur": "^4.1.4",
     "minimist": "^1.2.5",
     "rastree": "0.0.1",
-    "wareset-utilites": "0.1.0"
+    "wareset-utilites": "0.2.11"
   },
   "devDependencies": {
     "less": "3.x",

@@ -1,0 +1,13 @@
+# Ignore everything
+/*
+
+# But not these files...
+!.gitignore
+!jest.config.js
+!package.json
+!README.md
+
+!src/
+!__tests__/
+
+!rease

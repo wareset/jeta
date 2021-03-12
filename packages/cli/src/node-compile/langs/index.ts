@@ -4,7 +4,7 @@ let SUCRASE: any, TYPESCRIPT: any
 let PUG: any
 let LESS: any, SASS: any, STYLUS: any
 
-function sucrase(content = ''): string {
+const sucrase = (content = ''): string => {
   const compiler = SUCRASE || (SUCRASE = require('sucrase'))
   content = compiler.transform(content, {
     transforms: ['imports', 'typescript']
@@ -13,7 +13,7 @@ function sucrase(content = ''): string {
   return content
 }
 
-function typescript(content = ''): string {
+const typescript = (content = ''): string => {
   const compiler = TYPESCRIPT || (TYPESCRIPT = require('typescript'))
   content = compiler.transpileModule(content, {
     compilerOptions: {
@@ -26,7 +26,7 @@ function typescript(content = ''): string {
 }
 const ts = typescript
 
-function pug(content = ''): string {
+const pug = (content = ''): string => {
   const compiler = PUG || (PUG = require('pug'))
   content = compiler.render(PUG_MIXINS(content), {
     pretty: true,
@@ -37,7 +37,7 @@ function pug(content = ''): string {
 }
 const jade = pug
 
-function less(content = ''): string {
+const less = (content = ''): string => {
   const compiler = LESS || (LESS = require('less'))
   compiler.render(
     content,
@@ -47,14 +47,14 @@ function less(content = ''): string {
   // console.log('less', content)
   return content
 }
-function sass(content = ''): string {
+const sass = (content = ''): string => {
   const compiler = SASS || (SASS = require('sass'))
   content = compiler.renderSync({ data: content }).css.toString()
   // console.log('sass', content)
   return content
 }
 const scss = sass
-function stylus(content = ''): string {
+const stylus = (content = ''): string => {
   const compiler = STYLUS || (STYLUS = require('stylus'))
   content = compiler(content).render()
   // console.log('stylus', content)

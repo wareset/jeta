@@ -13,6 +13,7 @@ function pullImports(
   let i, token, tokenNext, tokenLast, isEndImport
 
   const tokens = typeof content === 'string' ? tokenize(content) : content
+  // console.log(JSON.stringify(tokens, null, 2))
 
   i = -1
   while (++i < tokens.length) {

@@ -1,5 +1,5 @@
 import rastree from 'rastree'
-import { regexp, escape } from 'rastree/lib'
+import { regexp, esc } from 'rastree/lib'
 
 import { lower, toKebabCase, getCID, getCIDArr, getAlias } from './lib'
 import parseHTMLX from './lib/parse-htmlx'
@@ -111,9 +111,9 @@ const prebuildStyle = (node: INode, result: IResult): void => {
     .join(minify ? '\n' : '\n\n').trim()
 
   if (result.style.css) {
-    const regCid = regexp(escape(result.options.cid), 'g')
+    const regCid = regexp(esc(result.options.cid), 'g')
     const scoper = getAlias(result.style.css, 'S', false)
-    const regScoper = regexp(escape(scoper), 'g')
+    const regScoper = regexp(esc(scoper), 'g')
 
     result.style.code =
       // '\n\t\t\t' +
@@ -167,26 +167,37 @@ const prebuildScript = (node: INode, result: IResult): void => {
 }
 
 const normalizeAttr = (raw: any, result: IResult, minify: boolean): any => {
-  const resArr =
-    typeof raw === 'string' ? parseHTMLX(raw, false) : [{ deep: 0, raw }]
+  const resArr = parseHTMLX(typeof raw === 'string' ? raw : `{${raw}}`, false)
 
   const __ = result.temp.__
-  if (
-    resArr.length === 1 &&
-    (!resArr[0].deep ||
-      resArr[0].raw === '' + +resArr[0].raw ||
-      !/[^$\w]/.test(resArr[0].raw))
-  ) {
-    if (!minify) return resArr[0].raw
-    if (!result.temp.attributes[resArr[0].raw]) {
-      result.temp.attributes[resArr[0].raw] = `${__}${resArr[0].raw}${__}`
-    }
-    return result.temp.attributes[resArr[0].raw]
+  // console.log(11111, resArr)
+  if (minify) {
+    resArr.forEach((v, k) => {
+      if (
+        !v.deep ||
+        v.raw === `${+v.raw}` ||
+        (/^['"`]/.test(v.raw) && v.raw[0] === v.raw[v.raw.length - 1])
+      ) {
+        if (!result.temp.attributes[v.raw]) {
+          result.temp.attributes[v.raw] = `${__}${v.raw}${__}`
+        }
+        resArr[k].raw = result.temp.attributes[v.raw]
+      }
+    })
   }
 
   let res = resArr.toString()
-  if (/^\.\.\./.test(res)) {
-    res = '({ ' + res + ' })'
+
+  const isSpread = /^\.\.\./.test(res)
+  if (!isSpread && resArr.length === 1) {
+    if (!minify) return resArr[0].raw
+    return result.temp.attributes[resArr[0].raw] || resArr[0].raw
+  }
+
+  // console.log(22222, resArr)
+  // console.log(11111, res)
+  if (isSpread) {
+    res = '(' + res.slice(3) + ')'
     if (!minify) res = `${result.temp.self}.spread${res}`
     else {
       if (!result.temp.spread) result.temp.spread = `${__}spread${__}`
@@ -207,19 +218,9 @@ const parseAttr = (attr: IAttr, result: IResult, minify: boolean): string => {
 }
 
 const getTagName = (node: INode, result: IResult, minify: boolean): string => {
-  // if (!node.tagName) return parseHTMLX(node.type) as string
   let res = node.tagName || node.type
   if (node.isCustomTag && res[0] !== '{') res = '{' + res + '}'
   return normalizeAttr(res, result, minify)
-  // const resArr = parseHTMLX(res, false)
-  // if (resArr.length === 1 && !resArr[0].deep) {
-  //   return normalizeAttr(res, result, minify)
-  // }
-
-  // if (!minify) return `${result.temp.self}.store(() => ${resArr})`
-  // const __ = result.temp.__
-  // if (!result.temp.store) result.temp.store = `${__}store${__}`
-  // return `${result.temp.store}(() => ${resArr})`
 }
 
 const generateTemplate = (
@@ -338,35 +339,21 @@ const createFinal = (result: IResult): void => {
   const cache: string[] = []
   let template = result.template.code
   Object.keys(result.temp.attributes).forEach((origin, key) => {
-    cache.push('\n\t' + origin)
+    const shortName = alias(__cache__ + key)
+    cache.push(shortName + ' = ' + origin)
     // prettier-ignore
     template = template.replace(
-      regexp(escape(result.temp.attributes[origin]), 'g'),
-      `${__cache__}[${key}]`)
+      regexp(esc(result.temp.attributes[origin]), 'g'), shortName)
   })
 
   let key = -1
   const helpers: string[] = []
-  // if (result.temp.tag) {
-  //   helpers.push('this.tag')
-  //   // prettier-ignore
-  //   template = template.replace(
-  //     regexp(escape(result.temp.tag), 'g'), `${__helpers__}[${++k}]`)
-  // }
-
-  // if (result.temp.store) {
-  //   helpers.push('(a) => this.store().run(a)')
-  //   // prettier-ignore
-  //   template = template.replace(
-  //     regexp(escape(result.temp.store), 'g'), `${__helpers__}[${++k}]`)
-  // }
-
   ;['tag', 'store', 'text', 'cdata', 'comment', 'spread'].forEach((v) => {
     if (!result.temp[v]) return
-    helpers.push(`${__self__}.${v}`)
+    const shortName = alias(__helpers__ + ++key)
+    helpers.push(`${shortName} = ${__self__}.${v}`)
     // prettier-ignore
-    template = template.replace(
-      regexp(escape(result.temp[v]), 'g'), `${__helpers__}[${++key}]`)
+    template = template.replace(regexp(esc(result.temp[v]), 'g'), shortName)
   })
 
   // \tinit(/* ${__props__}, ...${__args__} */) {
@@ -378,7 +365,7 @@ const createFinal = (result: IResult): void => {
 import { Rease as ${__rease__} } from 'rease';\n${
   result.script.module ? `\n${result.script.module}\n` : ''
 }${
-  cache.length ? `\nconst ${__cache__} = [${cache.join(',')}\n];\n` : ''
+  cache.length ? `\nconst ${cache.join(', ')};\n` : ''
 }
 export default class ${result.options.name} extends ${__rease__} {
 \tget cid() {
@@ -388,7 +375,7 @@ export default class ${result.options.name} extends ${__rease__} {
 \tinit(${__self__}) {${
   result.script.main ? `\n${result.script.main}\n` : ''
 }${
-  helpers.length ? `\n\t\tconst ${__helpers__} = [${helpers.join(', ')}];` : ''
+  helpers.length ? `\n\t\tconst ${helpers.join(', ')};` : ''
 }${
   template ? `\n\t\t${__self__}.template(${template}\n\t\t);\n` : ''
 }${
@@ -400,10 +387,10 @@ export default class ${result.options.name} extends ${__rease__} {
 }`.trim() + '\n'
 }
 
-export default function compile(
+export const compile = (
   content = '',
   optionsStart: IOptionsStart = OPTIONS
-): IResult {
+): IResult => {
   const THEME: ITheme = { style: [], script: [], template: [] }
   rastree
     .html(content)
@@ -444,3 +431,5 @@ export default function compile(
 
   return res
 }
+
+export default compile

@@ -1,7 +1,7 @@
 import { hash, trim } from 'wareset-utilites'
 import { isFirstNum } from './utils'
 
-function __CID__(content = '', cid = ''): string {
+const __CID__ = (content = '', cid = ''): string => {
   if (cid) {
     if (cid.indexOf('=') > -1) cid = cid.split('=')[1]
     cid = trim(cid.replace(/[^\w-]/g, ''), '\\W')
@@ -12,22 +12,22 @@ function __CID__(content = '', cid = ''): string {
   return cid
 }
 
-export function getCIDArr(
+export const getCIDArr = (
   content = '',
   type: 'class' | string | null = null,
   cid = ''
-): Array<string | boolean> {
+): Array<string | boolean> => {
   cid = __CID__(content, cid)
   if (type === 'class') return ['class', cid]
   else if (type) return [`data-${type.replace(/data-/i, '').trim()}`, cid]
   else return [cid, true]
 }
 
-export default function getCID(
+export const getCID = (
   content = '',
   type: 'class' | string | null = null,
   cid = ''
-): string {
+): string => {
   cid = __CID__(content, cid)
 
   if (type === 'class') cid = '.' + cid
@@ -36,3 +36,5 @@ export default function getCID(
 
   return cid
 }
+
+export default getCID
