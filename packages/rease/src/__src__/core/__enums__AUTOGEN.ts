@@ -1,0 +1,83 @@
+export const enum EH_PROPS {
+  default = "EH_PROPS_default",
+  system = "EH_PROPS_system",
+  flags = "EH_PROPS_flags"
+}
+
+export const enum EH_SERVICE {
+  self = "EH_SERVICE_self",
+  main = "EH_SERVICE_main",
+
+  rnode = "EH_SERVICE_rnode",
+
+  readonly = "EH_SERVICE_readonly",
+
+  refs = "EH_SERVICE_refs",
+  $refs = "EH_SERVICE_$refs",
+
+  node = "EH_SERVICE_node",
+  $node = "EH_SERVICE_$node",
+  home = "EH_SERVICE_home",
+  $home = "EH_SERVICE_$home",
+  parent = "EH_SERVICE_parent",
+  $parent = "EH_SERVICE_$parent",
+  children = "EH_SERVICE_children",
+  $children = "EH_SERVICE_$children",
+
+  
+  store = "EH_SERVICE_store",
+  storeProxy = "EH_SERVICE_storeProxy",
+  storeDestroy = "EH_SERVICE_storeDestroy",
+  storeSubscribe = "EH_SERVICE_storeSubscribe",
+
+  
+  storeOnSubscribe = "EH_SERVICE_storeOnSubscribe",
+  storeOnDestroy = "EH_SERVICE_storeOnDestroy",
+  storeOnUpdate = "EH_SERVICE_storeOnUpdate",
+  storeOnChange = "EH_SERVICE_storeOnChange",
+
+  
+  beforeCreateList = "EH_SERVICE_beforeCreateList",
+  onCreateList = "EH_SERVICE_onCreateList",
+  beforeMountList = "EH_SERVICE_beforeMountList",
+  onMountList = "EH_SERVICE_onMountList",
+  beforeDestroyList = "EH_SERVICE_beforeDestroyList",
+  onDestroyList = "EH_SERVICE_onDestroyList",
+
+  destroy = "EH_SERVICE_destroy",
+  destroyed = "EH_SERVICE_destroyed"
+}
+
+export const enum EH_RNODE {
+  rease = "EH_RNODE_rease",
+  $reaseClass = "EH_RNODE_$reaseClass",
+  $rule = "EH_RNODE_$rule",
+
+  
+  store = "EH_RNODE_store",
+  storeProxy = "EH_RNODE_storeProxy",
+  storeDestroy = "EH_RNODE_storeDestroy",
+  storeSubscribe = "EH_RNODE_storeSubscribe",
+
+  props = "EH_RNODE_props",
+  childs = "EH_RNODE_childs",
+
+  $node = "EH_RNODE_$node",
+  home = "EH_RNODE_home",
+  parent = "EH_RNODE_parent",
+  $children = "EH_RNODE_$children",
+
+  
+  $tagName = "EH_RNODE_$tagName",
+  
+  childrenForSlots = "EH_RNODE_childrenForSlots",
+
+  destroy = "EH_RNODE_destroy",
+  destroyed = "EH_RNODE_destroyed",
+
+  mark = "EH_RNODE_mark",
+
+  id = "EH_RNODE_id",
+  childIdExecute = "EH_RNODE_childIdExecute",
+  childIdZeroize = "EH_RNODE_childIdZeroize"
+}

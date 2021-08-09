@@ -1,0 +1,10 @@
+<script>
+let a = 12
+</script>
+
+<template lang="pug">
+div(':args(a = `[]`)', :ref:head, --async, :class:cc!="zxc", :break:zx, checked, :use)
+  //- r-if(:rule!="{2 > 1}")
+  //-   r-for-of(:rule!="{[[1],[2],[3],[4],[5]]}", :args="(v0, k)")
+  //-     span(:vars="(v = v0[0])") zxcc {v} {k}
+</template>

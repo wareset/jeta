@@ -1,24 +1,39 @@
 {
   "name": "rease",
   "version": "0.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "In progress",
-  "author": "cftcview <cftcview@gmail.com>",
-  "homepage": "https://github.com/wareset/rease/tree/main/packages/rease#readme",
-  "license": "MIT",
-  "main": "dist/index",
-  "module": "dist/index.mjs",
-  "files": [
-    "dist",
-    "README.md"
-  ],
   "keywords": [
     "rease"
   ],
+  "license": "MIT",
+  "homepage": "https://github.com/wareset/rease/tree/main/packages/rease#readme",
+  "bugs": {
+    "url": "https://github.com/wareset/rease/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wareset/rease.git"
+  },
+  "author": "cftcview <cftcview@gmail.com>",
+  "main": "index",
+  "module": "index.mjs",
+  "types": "index.d.ts",
+  "files": [
+    "README.md",
+    "__types__",
+    "index.d.ts",
+    "index.js",
+    "index.mjs"
+  ],
   "scripts": {
-    "babel:copy": "babel src --out-dir dist --copy-files --keep-file-extension --no-babelrc",
-    "babel:build": "babel dist --out-dir dist --config-file=\"../../babel.config.json\"",
-    "build": "rm -r ./dist && npm run -s babel:copy && npm run -s babel:build",
-    "dev": "npm run -s babel:copy -- --watch | npm run -s babel:build -- --watch",
+    "dester": "dester ./src ./ --babel",
+    "modify:enums": "node __scripts__/enums.js",
+    "build": "npm run -s modify:enums && npm run -s dester -- -r -m",
+    "dev": "npm run -s modify:enums -- --dev & npm run -s dester -- -w --no-r & wait",
+    "build:dist": "rollup -c __scripts__/rollup.config.js",
     "pkg:name": "cat package.json | grep '\"name\":' | cut -d '\"' -f4",
     "pkg:version": "cat package.json | grep '\"version\":' | cut -d '\"' -f4",
     "git:get:tag": "echo $(npm run -s pkg:name)@$(npm run -s pkg:version)",
@@ -26,18 +41,38 @@
     "git:commit": "npm run -s build && git add . && read -p 'Commit: ' c; c=${c:-v$(npm run -s pkg:version)} && n=$(npm run -s pkg:name) && git commit -m \"$n: $c\"",
     "commit": "read -p 'Version [patch]: ' V; V=${V:-patch} && npm version --force --no-git-tag-version $V; echo $V && read -p 'Push? (y/N): ' G && read -p 'Publish? (y/N): ' P && npm run -s git:commit && case $G in Y|y) $(git push);; esac && case $P in Y|y) $(npm run -s git:set:tag && git push --tags && npm -s publish);; esac"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wareset/rease.git"
-  },
-  "bugs": {
-    "url": "https://github.com/wareset/rease/issues"
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-transform-block-scoping": "^7.14.5",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-node-resolve": "^11.2.1",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^12.20.16",
+    "dester": "0.x",
+    "jest": "^27.0.6",
+    "rastree": "0.0.1",
+    "rollup": "^2.46.0",
+    "terser": "^5.7.1",
+    "ts-jest": "^27.0.3",
+    "ts-node": "^10.1.0",
+    "tslib": "^2.3.0",
+    "typescript": "4.x"
   },
   "dependencies": {
-    "@wareset-utilites/split": "0.3.0",
-    "wareset-utilites": "0.0.10"
+    "@wareset-utilites/array": "0.1.5",
+    "@wareset-utilites/error": "0.1.3",
+    "@wareset-utilites/is": "0.1.11",
+    "@wareset-utilites/lang": "0.1.9",
+    "@wareset-utilites/math": "0.1.5",
+    "@wareset-utilites/number": "0.1.3",
+    "@wareset-utilites/object": "0.1.6",
+    "@wareset-utilites/queuer": "0.2.3",
+    "@wareset-utilites/string": "0.1.9",
+    "@wareset-utilites/timeout": "0.0.7",
+    "@wareset-utilites/trycatch": "0.0.8",
+    "@wareset-utilites/typed": "0.3.8",
+    "@wareset-utilites/unique": "1.1.8",
+    "@wareset/store": "0.3.6"
   }
 }

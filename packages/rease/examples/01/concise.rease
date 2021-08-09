@@ -1,0 +1,68 @@
+<script module>
+import component from 'rease/component'
+import { onCreate, onMount, onChange, onDestroy } from 'rease/hooks'
+import { storeFactory, subscribeFactory } from 'rease/store'
+import { storeDefault } from 'rease/store'
+
+const $divColor = storeDefault('red')
+</script>
+
+<script>
+const store = storeFactory(component)
+const subscribe = subscribeFactory(component)
+
+const $test = store('text')
+const $count = store(1)
+
+onCreate(component, () => {
+  const intId = setInterval(() => {
+    $count.$++
+  }, 1000)
+
+  return () => {
+    clearInterval(intId)
+  }
+})
+</script>
+
+<template lang="pug" concise>
+mixin(name="list-item", vars="prop1 = 42, prop2 = 'asd'")
+  li $[prop1]{prop1.$}
+
+ul
+  list-item(prop1="q1", prop2="qwe")
+  list-item(prop1="q2")
+  list-item(prop1="q3")
+
+{'div'} divContent
+
+// CommentExample
+
+h1 Header
+
+.testclass(class="${$test.$}") DIV ELEMENT {$test} $[$count]{$count.$}
+  span SPAN ELEMENT {'text'}
+  slot
+
+SampleComponent text
+this text
+
+rule(if="$[$count]{$count.$ < 10}") {'count < 10'}
+rule(else-if="${$count.$ <= 20}") COUNT 10...20
+rule(else)
+  |count > 20
+  slot(name="slot2") Demo <i>content</i>
+
+rule(for-of="{[1, 2, 3]}" vars="item") {item}
+rule(name="for-of" data="{[1, 2, 3]}" vars="item") {item}
+
+rule(for-in="{{a:q, s:w, d:e}}" :value="item" :key="item.key") {item}
+</template>
+
+<style lang="sass" concise prefix="$">
+div.testclass
+  color: $divColor
+
+  span
+    color: green
+</style>

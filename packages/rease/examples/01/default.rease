@@ -1,0 +1,95 @@
+<script context="module">
+  import component from 'rease/component'
+  import { onCreate, onMount, onChange, onDestroy } from 'rease/hooks'
+  import { storeFactory, subscribeFactory } from 'rease/store'
+  import { storeDefault } from 'rease/store'
+
+  const $divColor = storeDefault('red')
+</script>
+
+<script>
+  const store = storeFactory(component)
+  const subscribe = subscribeFactory(component)
+
+  const $test = store('text')
+  const $count = store(1)
+
+  const params = { foo: 1, bar: 2 }
+
+  const cb = (e) => {
+    console.log(e)
+  }
+
+  onCreate(component, () => {
+    const intId = setInterval(() => {
+      $count.$++
+    }, 1000)
+
+    return () => {
+      clearInterval(intId)
+    }
+  })
+</script>
+
+<template>
+  <div :spread="$[q1]{params}" "$[props]{...props.$}" on:click="{cb}" on:click="{cb}" />
+  <mixin :name="list-item" :args="prop1, prop2" :vars="prop1 = 42, prop2 = 'asd'">
+    <li>$[prop1]{prop1.$}</li>
+  </mixin>
+  <ul>
+    <script>
+      let q = 23
+    </script>
+    <list-item prop1="q1" prop2="qwe" />
+    <list-item prop1="q2" />
+    <list-item prop1="q3" />
+  </ul>
+
+  <node :tag="$[]{$q1.$ ? 'div' : 'span'}" />
+
+  <!-- <{'div'}>divContent</> -->
+
+  <!-- CommentExample -->
+
+  <h1>Header</h1>
+
+  <div class="testclass {$test.$}">
+    DIV ELEMENT {$test.$}
+    {$count.$}
+    <span>SPAN ELEMENT {'text'}</span>
+    <slot />
+  </div>
+
+  <SampleComponent>text</SampleComponent>
+  <this>text</this>
+  <self>text</self>
+
+  <rule if="${$count.$ < 10}"> {'count 10'} </rule>
+  <rule else-if="${$count.$ <= 20}"> COUNT 10...20 </rule>
+  <rule else>
+    count > 20
+    <slot :name="slot2">Demo <i>content</i></slot>
+  </rule>
+
+  <rule for-of="{[1, 2, 3]}" :vars="item"> {item} </rule>
+  <rule :name="for-of" :data={[1, 2, 3]} :vars="item"> {item} </rule>
+
+  <rule for-in={{ a: 1, s: 2, d: 3 }} vars="v,k,a"> {v} </rule>
+</template>
+
+<!-- <style lang="less" prefix="$">
+  div.testclass {
+    color: $divColor;
+
+    span {
+      color: green;
+    }
+  }
+</style> -->
+
+<!-- <style lang="sass" prefix="$">
+div.testclass
+  color $divColor;
+  span
+    color: green;
+</style> -->

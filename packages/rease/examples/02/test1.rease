@@ -1,0 +1,24 @@
+<script>
+import { store } from 'rease'
+
+const q = store(this)(12)
+const click = (e) => {
+  console.log(e)
+}
+
+const click2 = (e) => {
+  console.log(e)
+}
+
+const $node = store()
+</script>
+
+<template lang="pug">
+// comment
+div.qwe(:args:zxc="{arg1 = 555}" :ref:header="{$node}")
+  tag(:tag="{@ q || 'h1'}") Header
+  span(use:click2="{q}") sometext {@[q]( q )} {arg1}
+  button('on:click.once:qwe(click, click2)',
+    on:dblclick:head="{[click, click2]}",
+    :on:1="{[['click2', click, click2], ['click3', click]]}") < click me! {} zxc {@}
+</template>
